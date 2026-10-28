@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#10172a">
+  <title>📱 스마트폰 카메라 연동 테스트</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0c1222;--panel:#151e32;--panel2:#1d2941;--line:#33415f;--text:#f3f6ff;--muted:#aab6d0;--accent:#8cb7ff;--accent2:#b9a1ff;--ok:#66e0b1;--warn:#ffd17f;--err:#ff929c}
+    *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;min-height:100vh;color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(900px 500px at 100% -10%,#263962 0%,transparent 65%),radial-gradient(700px 450px at -10% 20%,#332752 0%,transparent 65%),var(--bg);padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom)}
+    .wrap{width:min(840px,100%);margin:0 auto;padding:26px 0 34px}.hero{text-align:center;padding:12px 8px 22px}.logo{display:inline-grid;place-items:center;width:58px;height:58px;border-radius:19px;background:linear-gradient(135deg,#8cb7ff33,#b9a1ff33);border:1px solid #a8bcff55;font-size:28px;box-shadow:0 12px 40px #718bff17}.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#b6c8ff;margin:15px 0 7px}.hero h1{font-size:clamp(24px,6vw,34px);letter-spacing:-.04em;line-height:1.2;margin:0 0 10px}.hero p{margin:0 auto;max-width:540px;color:var(--muted);font-size:14px;line-height:1.7}
+    .layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr);gap:14px;align-items:start}.card{background:linear-gradient(180deg,#19243bfa,#131c2ff7);border:1px solid var(--line);border-radius:22px;padding:17px;box-shadow:0 18px 50px #0002;min-width:0}.card h2{font-size:16px;margin:0 0 13px;letter-spacing:-.02em}.preview{position:relative;background:#050811;border:1px solid #364563;border-radius:16px;overflow:hidden;aspect-ratio:3/4;display:grid;place-items:center;isolation:isolate}.preview video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#050811}.placeholder{padding:25px;text-align:center;color:#aebad2;max-width:280px;line-height:1.65;font-size:13px}.placeholder .cam{font-size:42px;display:block;margin-bottom:10px;filter:drop-shadow(0 5px 15px #8cb7ff33)}.live-badge{display:none;position:absolute;top:12px;left:12px;z-index:2;padding:6px 9px;border-radius:999px;background:#111bcb9e;border:1px solid #b8c9ff55;font-size:11px;font-weight:700;backdrop-filter:blur(8px)}.live-badge.on{display:block}.rec-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff7789;margin-right:5px;box-shadow:0 0 10px #ff7789}.video-note{margin:10px 2px 0;font-size:12px;line-height:1.6;color:var(--muted)}
+    .controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.btn{appearance:none;border:1px solid #445474;color:var(--text);background:#25324c;border-radius:12px;padding:11px 13px;font:inherit;font-size:13px;font-weight:700;min-height:43px;cursor:pointer;touch-action:manipulation;transition:transform .12s,border-color .12s,background .12s}.btn:active{transform:scale(.98)}.btn:focus-visible,select:focus-visible{outline:3px solid #8cb7ff88;outline-offset:2px}.btn.primary{background:linear-gradient(135deg,#8cb7ff,#b9a1ff);color:#10172a;border-color:transparent}.btn:disabled{opacity:.45;cursor:not-allowed}.field{display:block;margin:0 0 13px}.field span{display:block;color:#c0cbe0;font-size:12px;margin:0 0 7px}.field select{width:100%;min-height:44px;border-radius:11px;border:1px solid #3c4a68;background:#0e1729;color:var(--text);padding:9px 11px;font:inherit;font-size:13px}.status{display:flex;gap:10px;align-items:flex-start;padding:12px 13px;border-radius:13px;border:1px solid #33415f;background:#10192b;margin:0 0 14px}.status-icon{flex:0 0 22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#33415f;color:#dbe5ff;font-size:12px;font-weight:900}.status strong{display:block;font-size:13px;margin-bottom:3px}.status p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}.status.ok{border-color:#286e59}.status.ok .status-icon{background:#1b6952;color:#dbfff0}.status.warn{border-color:#78623b}.status.warn .status-icon{background:#6b5124;color:#fff2d1}.status.err{border-color:#743c4b}.status.err .status-icon{background:#793744;color:#ffe4e7}.metric{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #2b3852;font-size:12px}.metric:last-child{border-bottom:0}.metric span{color:var(--muted)}.metric b{text-align:right;font-weight:600;overflow-wrap:anywhere}.tip{margin-top:13px;border:1px solid #3a3e64;background:#24264366;border-radius:13px;padding:12px;color:#c8ccec;font-size:12px;line-height:1.65}.capture{margin-top:13px;display:none}.capture.show{display:block}.capture img{width:100%;display:block;border-radius:13px;border:1px solid #3c4967;margin-bottom:8px}.capture a{color:#bdd0ff;font-size:13px;font-weight:700}.footer{text-align:center;color:#7786a6;font-size:11px;line-height:1.7;padding:18px 8px 0}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:680px){.wrap{padding-top:14px}.hero{padding-bottom:17px}.layout{grid-template-columns:1fr}.card{padding:14px;border-radius:19px}.preview{aspect-ratio:4/5;max-height:58vh}.controls .btn{flex:1 1 calc(50% - 8px)}.controls .btn.primary{flex-basis:100%}.right-card{order:2}.left-card{order:1}.status{padding:11px}}
+    @media(max-width:360px){body{padding-left:10px;padding-right:10px}.hero h1{font-size:23px}.card{padding:12px}.controls .btn{font-size:12px;padding:10px 8px}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="logo" aria-hidden="true">📱</div>
+      <div class="eyebrow">CAMERA CONNECTION CHECK</div>
+      <h1>스마트폰 카메라 연동 테스트</h1>
+      <p>브라우저에서 카메라 권한과 영상 연결 상태를 확인하세요.<br>카메라는 시작 버튼을 누른 뒤에만 활성화됩니다.</p>
+    </header>
+
+    <div class="layout">
+      <section class="card left-card" aria-labelledby="preview-heading">
+        <h2 id="preview-heading">실시간 카메라 미리보기</h2>
+        <div class="preview" id="preview">
+          <video id="video" autoplay playsinline muted aria-label="실시간 카메라 화면"></video>
+          <div class="placeholder" id="placeholder"><span class="cam">📷</span><b>아직 카메라가 연결되지 않았어요</b><br>아래의 ‘카메라 시작’ 버튼을 눌러 권한을 허용해 주세요.</div>
+          <div class="live-badge" id="liveBadge"><span class="rec-dot"></span>LIVE</div>
+        </div>
+        <p class="video-note">🔒 영상은 이 페이지의 미리보기에만 표시됩니다. 이 파일에는 카메라 영상을 업로드하는 기능이 없습니다.</p>
+        <div class="controls">
+          <button class="btn primary" id="startBtn" type="button">카메라 시작</button>
+          <button class="btn" id="switchBtn" type="button" disabled>전면 / 후면 전환</button>
+          <button class="btn" id="captureBtn" type="button" disabled>사진 캡처</button>
+          <button class="btn" id="stopBtn" type="button" disabled>카메라 종료</button>
+        </div>
+        <div class="capture" id="captureResult" aria-live="polite">
+          <h2 style="margin-top:17px">캡처 결과</h2>
+          <img id="captureImage" alt="캡처한 카메라 이미지">
+          <a id="downloadLink" download="camera-test.jpg" href="#">사진 다운로드</a>
+        </div>
+        <canvas id="canvas" class="sr-only"></canvas>
+      </section>
+
+      <aside class="card right-card" aria-labelledby="status-heading">
+        <h2 id="status-heading">연결 상태</h2>
+        <div class="status" id="statusBox" role="status" aria-live="polite">
+          <div class="status-icon" id="statusIcon">i</div>
+          <div><strong id="statusTitle">대기 중</strong><p id="statusText">카메라 시작을 누르면 브라우저에서 권한을 요청합니다.</p></div>
+        </div>
+        <label class="field" for="cameraSelect"><span>카메라 장치 선택</span><select id="cameraSelect" disabled><option value="">카메라를 먼저 시작해 주세요</option></select></label>
+        <div class="metric"><span>연결 상태</span><b id="metricState">연결 전</b></div>
+        <div class="metric"><span>선택된 카메라</span><b id="metricCamera">-</b></div>
+        <div class="metric"><span>영상 해상도</span><b id="metricResolution">-</b></div>
+        <div class="metric"><span>브라우저</span><b id="metricBrowser">확인 중</b></div>
+        <div class="tip"><b>사용 팁</b><br>• 모바일에서는 Safari 또는 Chrome 최신 버전을 권장합니다.<br>• 카메라 권한을 거부했다면 브라우저 사이트 설정에서 다시 허용해 주세요.<br>• 브라우저 보안 정책에 따라 로컬 파일에서 카메라 사용이 제한될 수 있습니다. 이 경우 HTTPS 주소로 열어 주세요.</div>
+      </aside>
+    </div>
+    <footer class="footer">단일 HTML 파일 · 외부 라이브러리 없음 · 카메라 영상은 별도로 전송되지 않습니다.</footer>
+  </main>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const video = $('video');
+  const startBtn = $('startBtn');
+  const switchBtn = $('switchBtn');
+  const captureBtn = $('captureBtn');
+  const stopBtn = $('stopBtn');
+  const cameraSelect = $('cameraSelect');
+  const placeholder = $('placeholder');
+  const liveBadge = $('liveBadge');
+  const statusBox = $('statusBox');
+  let stream = null;
+  let facingMode = 'environment';
+  let busy = false;
+  let cameraDevices = [];
+
+  function setStatus(kind, title, message) {
+    statusBox.className = 'status' + (kind ? ' ' + kind : '');
+    $('statusIcon').textContent = kind === 'ok' ? '✓' : kind === 'warn' ? '!' : kind === 'err' ? '×' : 'i';
+    $('statusTitle').textContent = title;
+    $('statusText').textContent = message;
+  }
+  function browserName() {
+    const ua = navigator.userAgent || '';
+    if (/SamsungBrowser/i.test(ua)) return 'Samsung Internet';
+    if (/Edg\//i.test(ua)) return 'Microsoft Edge';
+    if (/CriOS/i.test(ua) || /Chrome/i.test(ua)) return 'Chrome';
+    if (/FxiOS|Firefox/i.test(ua)) return 'Firefox';
+    if (/Safari/i.test(ua)) return 'Safari';
+    return '기타 브라우저';
+  }
+  function updateButtons(connected) {
+    startBtn.disabled = busy || connected;
+    switchBtn.disabled = busy || !connected;
+    captureBtn.disabled = busy || !connected;
+    stopBtn.disabled = busy || !connected;
+    cameraSelect.disabled = busy || !connected || cameraDevices.length < 2;
+  }
+  function currentTrack() { return stream && stream.getVideoTracks && stream.getVideoTracks()[0]; }
+  function updateMetrics() {
+    const track = currentTrack();
+    const settings = track && track.getSettings ? track.getSettings() : {};
+    $('metricState').textContent = track && track.readyState === 'live' ? '연결됨' : '연결 전';
+    $('metricCamera').textContent = track ? (track.label || (settings.facingMode === 'user' ? '전면 카메라' : '후면 카메라')) : '-';
+    const w = video.videoWidth || settings.width;
+    const h = video.videoHeight || settings.height;
+    $('metricResolution').textContent = w && h ? `${w} × ${h}` : '-';
+  }
+  async function refreshCameraList() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      cameraDevices = devices.filter(d => d.kind === 'videoinput');
+      const selectedId = currentTrack() && currentTrack().getSettings().deviceId;
+      cameraSelect.replaceChildren();
+      if (!cameraDevices.length) {
+        const opt = document.createElement('option'); opt.value = ''; opt.textContent = '사용 가능한 카메라가 없습니다'; cameraSelect.append(opt);
+      } else {
+        cameraDevices.forEach((d, i) => {
+          const opt = document.createElement('option');
+          opt.value = d.deviceId;
+          opt.textContent = d.label || `카메라 ${i + 1}`;
+          if (d.deviceId && d.deviceId === selectedId) opt.selected = true;
+          cameraSelect.append(opt);
+        });
+      }
+      cameraSelect.disabled = busy || !stream || cameraDevices.length < 2;
+    } catch (err) {
+      console.warn('카메라 목록을 가져오지 못했습니다.', err);
+    }
+  }
+  function stopTracks() {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+    video.pause();
+    video.srcObject = null;
+    liveBadge.classList.remove('on');
+    placeholder.hidden = false;
+    $('metricState').textContent = '연결 전';
+    $('metricCamera').textContent = '-';
+    $('metricResolution').textContent = '-';
+  }
+  async function attachStream(constraints) {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      throw new Error('이 브라우저에서는 카메라 API를 사용할 수 없습니다. HTTPS 주소와 최신 브라우저를 이용해 주세요.');
+    }
+    const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+    if (stream) stream.getTracks().forEach(track => track.stop());
+    stream = newStream;
+    video.srcObject = stream;
+    video.muted = true;
+    video.playsInline = true;
+    await video.play();
+    placeholder.hidden = true;
+    liveBadge.classList.add('on');
+    const track = currentTrack();
+    if (track) track.addEventListener('ended', () => {
+      stopTracks(); updateButtons(false); setStatus('warn', '카메라 연결이 종료됨', '카메라가 중지되었습니다. 필요하면 다시 시작해 주세요.');
+    }, { once: true });
+    await refreshCameraList();
+    updateMetrics();
+  }
+  async function startCamera(deviceId) {
+    if (busy) return;
+    busy = true; updateButtons(!!stream);
+    setStatus('', '카메라 연결 중…', '브라우저의 카메라 권한 요청을 확인해 주세요.');
+    try {
+      const constraints = { audio: false, video: deviceId ? { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } } : { facingMode: { ideal: facingMode }, width: { ideal: 1280 }, height: { ideal: 720 } } };
+      await attachStream(constraints);
+      setStatus('ok', '카메라가 연결되었습니다', '실시간 미리보기가 정상적으로 시작되었습니다.');
+      updateButtons(true);
+    } catch (err) {
+      const name = err && err.name ? err.name : '';
+      let title = '카메라 연결 실패';
+      let message = '카메라를 시작하지 못했습니다. 브라우저를 확인하고 다시 시도해 주세요.';
+      if (name === 'NotAllowedError' || name === 'SecurityError') { title = '카메라 권한이 필요합니다'; message = '브라우저의 사이트 권한에서 카메라 접근을 허용한 뒤 다시 시도해 주세요. 로컬 파일이라면 HTTPS 주소가 필요할 수 있습니다.'; }
+      else if (name === 'NotFoundError' || name === 'DevicesNotFoundError') { title = '카메라를 찾을 수 없습니다'; message = '카메라가 있는 기기인지, 다른 앱이 카메라를 사용 중인지 확인해 주세요.'; }
+      else if (name === 'NotReadableError' || name === 'TrackStartError') { title = '카메라를 사용할 수 없습니다'; message = '다른 앱이 카메라를 사용 중일 수 있습니다. 다른 앱을 닫고 다시 시도해 주세요.'; }
+      else if (name === 'OverconstrainedError') { title = '선택한 카메라를 열 수 없습니다'; message = '다른 카메라 장치를 선택하거나 페이지를 새로고침한 뒤 다시 시도해 주세요.'; }
+      else if (err && err.message && !name) message = err.message;
+      stopTracks(); updateButtons(false); setStatus('err', title, message);
+    } finally {
+      busy = false; updateButtons(!!stream);
+    }
+  }
+  async function switchCamera() {
+    if (busy || !stream) return;
+    const currentId = currentTrack() && currentTrack().getSettings().deviceId;
+    const currentIndex = cameraDevices.findIndex(d => d.deviceId === currentId);
+    if (cameraDevices.length > 1 && currentIndex >= 0) {
+      const next = cameraDevices[(currentIndex + 1) % cameraDevices.length];
+      await startCamera(next.deviceId);
+    } else {
+      facingMode = facingMode === 'environment' ? 'user' : 'environment';
+      await startCamera();
+    }
+  }
+  function captureFrame() {
+    if (!stream || !video.videoWidth || !video.videoHeight) {
+      setStatus('warn', '아직 캡처할 준비가 되지 않았습니다', '영상이 표시된 뒤 다시 눌러 주세요.'); return;
+    }
+    const canvas = $('canvas');
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) { setStatus('err', '사진을 캡처하지 못했습니다', '이 브라우저에서는 캔버스를 사용할 수 없습니다.'); return; }
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob(blob => {
+      if (!blob) { setStatus('err', '사진을 만들지 못했습니다', '다시 시도해 주세요.'); return; }
+      const url = URL.createObjectURL(blob);
+      const oldUrl = $('captureImage').dataset.url;
+      if (oldUrl) URL.revokeObjectURL(oldUrl);
+      $('captureImage').src = url; $('captureImage').dataset.url = url;
+      $('downloadLink').href = url;
+      $('captureResult').classList.add('show');
+      setStatus('ok', '사진 캡처 완료', '캡처한 이미지는 이 페이지에서만 표시되며, 다운로드를 눌러 저장할 수 있습니다.');
+    }, 'image/jpeg', 0.92);
+  }
+  startBtn.addEventListener('click', () => startCamera());
+  switchBtn.addEventListener('click', switchCamera);
+  captureBtn.addEventListener('click', captureFrame);
+  stopBtn.addEventListener('click', () => {
+    stopTracks(); updateButtons(false); setStatus('', '카메라가 종료되었습니다', '다시 테스트하려면 카메라 시작을 눌러 주세요.');
+  });
+  cameraSelect.addEventListener('change', e => { if (e.target.value) startCamera(e.target.value); });
+  video.addEventListener('loadedmetadata', updateMetrics);
+  video.addEventListener('resize', updateMetrics);
+  window.addEventListener('pagehide', stopTracks);
+  $('metricBrowser').textContent = browserName();
+  updateButtons(false);
+  if (!window.isSecureContext) {
+    setStatus('warn', '보안 연결을 확인해 주세요', '카메라 API는 보통 HTTPS 또는 신뢰할 수 있는 로컬 환경에서만 사용할 수 있습니다.');
+  }
+})();
+</script>
+</body>
+</html>
